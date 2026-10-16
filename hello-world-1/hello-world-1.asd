@@ -6,5 +6,4 @@
                #:serapeum #:defclass-std)
   :components ((:module "src"
                 :components
-                ((:file "package")
-                 (:file "hello-world-1")))))
+                ((:file "hello-world-1")))))

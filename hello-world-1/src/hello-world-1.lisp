@@ -1,7 +1,7 @@
 (declaim (optimize (speed 0) (safety 3) (debug 3)))
 
 (defpackage #:hello-world-1
-  (:use #:cl #:gtk4)
+  (:use #:cl)
   (:import-from :defclass-std
    :defclass/std)
   (:export
