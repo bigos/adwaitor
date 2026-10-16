@@ -10,7 +10,7 @@
 (DEFUN MAIN-WINDOW-CONTENT (WINDOW)
   (DECLARE (IGNORABLE WINDOW))
   (LET ((EXPRESSION NIL))
-    (gtk4:WIDGET-ADD-CSS-CLASS WINDOW "devel")
+    ;; (gtk4:WIDGET-ADD-CSS-CLASS WINDOW "devel")
     (SETF (gtk4:WIDGET-SIZE-REQUEST WINDOW) '(400 600))
     (LET ((BOX (gtk4:MAKE-BOX :ORIENTATION gtk4:+ORIENTATION-VERTICAL+ :SPACING 0)))
       (SETF (ADW:WINDOW-CONTENT WINDOW) BOX)
@@ -105,7 +105,7 @@
                        (SETF *app-window*
                              (ADW:MAKE-APPLICATION-WINDOW :APP
                                                           *APPLICATION*))))
-                 (MAIN-WINDOW-CONTENT GTK4::WIN)
+                 ;; (MAIN-WINDOW-CONTENT GTK4::WIN)
 
                  (gtk4:CONNECT GTK4::WIN "destroy"
                           (LAMBDA (GTK4::WIN)
@@ -117,4 +117,5 @@
 (defun main ()
   (unless (adw:initialized-p)
     (adw:init))
-  (window-main))
+  (window-main)
+  (gtk4:idle-add (lambda () (main-window-content *app-window*))))
