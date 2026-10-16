@@ -5,7 +5,7 @@
 ;;; (main)
 
 (defparameter *application* nil)
-(defparameter  *ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW* nil)
+(defparameter  *app-window* nil)
 
 (DEFUN ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
     (WINDOW)
@@ -104,7 +104,7 @@
              (LAMBDA (GTK4::APP)
                (DECLARE (IGNORE GTK4::APP))
                (LET ((GTK4::WIN
-                       (SETF *ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW*
+                       (SETF *app-window*
                              (ADW:MAKE-APPLICATION-WINDOW :APP
                                                           *APPLICATION*))))
                  (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
@@ -112,7 +112,7 @@
                  (gtk4:CONNECT GTK4::WIN "destroy"
                           (LAMBDA (GTK4::WIN)
                             (DECLARE (IGNORE GTK4::WIN))
-                            (SETF *ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW*
+                            (SETF *app-window*
                                   NIL))))))
     (gtk4:APPLICATION-RUN GTK4::APP GTK4::ARGV)))
 
@@ -122,5 +122,5 @@
   (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN)
   (gtk4:idle-add (lambda ()
                    (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
-                    *ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW*)
+                    *app-window*)
                    nil)))
