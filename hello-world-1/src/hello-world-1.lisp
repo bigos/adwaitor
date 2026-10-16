@@ -31,8 +31,8 @@
 		   (let ((window (gir:invoke (*gtk* "ApplicationWindow" 'new) app))
                          (label (gir:invoke (*gtk* "Label" 'new) "Hello World")))
 
-                     (gir:invoke (*gtk* "Window" 'set_title) window "Hello")
-                     (gir:invoke (*gtk* "Window" 'set_default_size) window 200 200)
-                     (gir:invoke (*gtk* "Window" 'set_child) window label)
-		     (gir:invoke (window 'window_present)))))
+                     (gir:invoke (*gtk* "Window" 'set-title) "Hello")
+                     (gir:invoke (*gtk* "Window" 'set-default-size) window 200 200)
+                     (gir:invoke (*gtk* "Window" 'set-child) window label)
+		     (gir:invoke (window 'window-present)))))
     (gir:invoke (app 'run) nil)))
