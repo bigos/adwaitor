@@ -7,8 +7,7 @@
 (defparameter *application* nil)
 (defparameter  *app-window* nil)
 
-(DEFUN ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
-    (WINDOW)
+(DEFUN MAIN-WINDOW-CONTENT (WINDOW)
   (DECLARE (IGNORABLE WINDOW))
   (LET ((EXPRESSION NIL))
     (gtk4:WIDGET-ADD-CSS-CLASS WINDOW "devel")
@@ -94,8 +93,7 @@
         (gtk4:BOX-APPEND BOX CAROUSEL)))
     (UNLESS (gtk4:WIDGET-VISIBLE-P WINDOW) (gtk4:WINDOW-PRESENT WINDOW))))
 
-(DEFUN ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN
-    (&OPTIONAL GTK4::ARGV)
+(DEFUN window-main (&OPTIONAL GTK4::ARGV)
   (LET ((GTK4::APP
           (gtk4:MAKE-APPLICATION :APPLICATION-ID
                             "org.bohonghuang.libadwaita-example.simple-repl"
@@ -107,8 +105,8 @@
                        (SETF *app-window*
                              (ADW:MAKE-APPLICATION-WINDOW :APP
                                                           *APPLICATION*))))
-                 (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
-                  GTK4::WIN)
+                 (MAIN-WINDOW-CONTENT GTK4::WIN)
+
                  (gtk4:CONNECT GTK4::WIN "destroy"
                           (LAMBDA (GTK4::WIN)
                             (DECLARE (IGNORE GTK4::WIN))
@@ -119,8 +117,4 @@
 (defun main ()
   (unless (adw:initialized-p)
     (adw:init))
-  (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN)
-  (gtk4:idle-add (lambda ()
-                   (ORG.BOHONGHUANG.LIBADWAITA-EXAMPLE.SIMPLE-REPL.MAIN-WINDOW-CONTENT
-                    *app-window*)
-                   nil)))
+  (window-main))
