@@ -16,9 +16,11 @@
       (SETF (ADW:WINDOW-CONTENT WINDOW) BOX)
       (LET ((HEADER-BAR (ADW:MAKE-HEADER-BAR)))
         (SETF (ADW:HEADER-BAR-TITLE-WIDGET HEADER-BAR)
-              (ADW:MAKE-WINDOW-TITLE :TITLE (LISP-IMPLEMENTATION-TYPE)
+              (ADW:MAKE-WINDOW-TITLE :TITLE (format nil "~A will be counter" (LISP-IMPLEMENTATION-TYPE))
                                      :SUBTITLE
-                                     (LISP-IMPLEMENTATION-VERSION)))
+                                     ;; (LISP-IMPLEMENTATION-VERSION)
+                                     nil
+                                     ))
         (gtk4:BOX-APPEND BOX HEADER-BAR))
       (LET ((CAROUSEL (ADW:MAKE-CAROUSEL)))
         (SETF (gtk4:WIDGET-HEXPAND-P CAROUSEL) T
@@ -28,7 +30,7 @@
           (SETF (gtk4:WIDGET-HEXPAND-P PAGE) T
                 (gtk4:WIDGET-VEXPAND-P PAGE) T
                 (ADW:STATUS-PAGE-ICON-NAME PAGE) "utilities-terminal-symbolic"
-                (ADW:STATUS-PAGE-TITLE PAGE) "Simple Lisp REPL"
+                (ADW:STATUS-PAGE-TITLE PAGE) "Simple Lisp REPL for counter"
                 (ADW:STATUS-PAGE-DESCRIPTION PAGE) " ")
           (FLET ((EVAL-EXPRESSION (WIDGET)
                    (DECLARE (IGNORE WIDGET))
@@ -50,17 +52,17 @@
                     (SETF (gtk4:WIDGET-VALIGN ENTRY) gtk4:+ALIGN-CENTER+
                           (gtk4:WIDGET-HEXPAND-P ENTRY) T)
                     (gtk4:CONNECT ENTRY "changed"
-                             (LAMBDA (ENTRY)
-                               (SETF EXPRESSION
-                                     (IGNORE-ERRORS
-                                      (READ-FROM-STRING
-                                       (ENTRY-BUFFER-TEXT
-                                        (ENTRY-BUFFER ENTRY)))))
-                               (FUNCALL
-                                (IF EXPRESSION
-                                    #'WIDGET-REMOVE-CSS-CLASS
-                                    #'WIDGET-ADD-CSS-CLASS)
-                                ENTRY "error")))
+                                  (LAMBDA (ENTRY)
+                                    (SETF EXPRESSION
+                                          (IGNORE-ERRORS
+                                           (READ-FROM-STRING
+                                            (ENTRY-BUFFER-TEXT
+                                             (ENTRY-BUFFER ENTRY)))))
+                                    (FUNCALL
+                                     (IF EXPRESSION
+                                         #'WIDGET-REMOVE-CSS-CLASS
+                                         #'WIDGET-ADD-CSS-CLASS)
+                                     ENTRY "error")))
                     (gtk4:CONNECT ENTRY "activate" #'EVAL-EXPRESSION)
                     (ADW:ACTION-ROW-ADD-SUFFIX ROW ENTRY))
                   (ADW:PREFERENCES-GROUP-ADD GROUP ROW))
@@ -68,7 +70,7 @@
               (LET ((CAROUSEL-BOX BOX)
                     (BOX
                       (gtk4:MAKE-BOX :ORIENTATION gtk4:+ORIENTATION-HORIZONTAL+ :SPACING
-                                0)))
+                                     0)))
                 (SETF (gtk4:WIDGET-HEXPAND-P BOX) T
                       (gtk4:WIDGET-HALIGN BOX) gtk4:+ALIGN-FILL+)
                 (LET ((BUTTON (gtk4:MAKE-BUTTON :LABEL "Exit")))
@@ -76,9 +78,9 @@
                         (gtk4:WIDGET-MARGIN-ALL BUTTON) 10
                         (gtk4:WIDGET-HEXPAND-P BUTTON) T)
                   (gtk4:CONNECT BUTTON "clicked"
-                           (LAMBDA (BUTTON)
-                             (DECLARE (IGNORE BUTTON))
-                             (gtk4:WINDOW-DESTROY WINDOW)))
+                                (LAMBDA (BUTTON)
+                                  (DECLARE (IGNORE BUTTON))
+                                  (gtk4:WINDOW-DESTROY WINDOW)))
                   (gtk4:BOX-APPEND BOX BUTTON))
                 (LET ((BUTTON (gtk4:MAKE-BUTTON :LABEL "Eval")))
                   (SETF (gtk4:WIDGET-CSS-CLASSES BUTTON)
