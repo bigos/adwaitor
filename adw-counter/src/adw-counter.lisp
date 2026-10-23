@@ -105,7 +105,7 @@
                        (SETF *app-window*
                              (ADW:MAKE-APPLICATION-WINDOW :APP
                                                           *APPLICATION*))))
-                 ;; (MAIN-WINDOW-CONTENT GTK4::WIN)
+                 (MAIN-WINDOW-CONTENT GTK4::WIN)
 
                  (gtk4:CONNECT GTK4::WIN "destroy"
                           (LAMBDA (GTK4::WIN)
