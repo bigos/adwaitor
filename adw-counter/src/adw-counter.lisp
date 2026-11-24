@@ -24,7 +24,8 @@
   (let ((header-bar (adw:make-header-bar)))
     (setf (adw:header-bar-title-widget header-bar)
           (adw:make-window-title
-           :title (format nil "~A Counter" (lisp-implementation-type))))
+           :title (format nil "~A Counter" (lisp-implementation-type))
+           :subtitle ""))
     header-bar))
 
 (defun build-main-content (window)
