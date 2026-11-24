@@ -1,6 +1,4 @@
 (defpackage #:adw-counter
-  (:use #:cl #:gtk4)
-  (:import-from :defclass-std
-                :defclass/std)
+  (:use #:cl)
   (:export
    main))
