@@ -19,8 +19,7 @@
               (adw:make-window-title :title (format nil "~A will be counter" (lisp-implementation-type))
                                      :subtitle
                                      ;; (LISP-IMPLEMENTATION-VERSION)
-                                     nil
-                                     ))
+                                     nil))
         (gtk4:box-append box header-bar))
       (let ((carousel (adw:make-carousel)))
         (setf (gtk4:widget-hexpand-p carousel) t
@@ -39,7 +38,7 @@
                            (princ-to-string
                             (handler-case (eval expression)
                               (error (err) err)))))))
-            (let ((box
+            (let ((box1
                     (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0)))
               (let ((group (adw:make-preferences-group)))
                 (setf (gtk4:widget-margin-all group) 10)
@@ -66,9 +65,9 @@
                     (gtk4:connect entry "activate" #'eval-expression)
                     (adw:action-row-add-suffix row entry))
                   (adw:preferences-group-add group row))
-                (gtk4:box-append box group))
+                (gtk4:box-append box1 group))
               (let ((carousel-box box)
-                    (box
+                    (box2
                       (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
                                      0)))
                 (setf (gtk4:widget-hexpand-p box) t
@@ -89,8 +88,8 @@
                         (gtk4:widget-hexpand-p button) t)
                   (gtk4:connect button "clicked" #'eval-expression)
                   (gtk4:box-append box button))
-                (gtk4:box-append carousel-box box))
-              (setf (adw:status-page-child page) box)))
+                (gtk4:box-append carousel-box box2))
+              (setf (adw:status-page-child page) box1)))
           (adw:carousel-append carousel page))
         (gtk4:box-append box carousel)))
     (unless (gtk4:widget-visible-p window) (gtk4:window-present window))))
