@@ -42,17 +42,29 @@
                 '("suggested-action" "pill")
                 (gtk4:widget-margin-all button) 10
                 (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda () (warn "clicked -")))
+          (gtk4:connect button "clicked" (lambda (button) (warn "clicked -")))
           (gtk4:box-append box2 button))
         (let ((button (gtk4:make-button :label "Eval +")))
           (setf (gtk4:widget-css-classes button)
                 '("suggested-action" "pill")
                 (gtk4:widget-margin-all button) 10
                 (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda () (warn "clicked +")))
+          (gtk4:connect button "clicked" (lambda (button) (warn "clicked +")))
           (gtk4:box-append box2 button))
+        (gtk4:box-append box box2))
+      (let ((box3
+              (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
+                             0)))
+        (setf (gtk4:widget-hexpand-p box3) t
+              (gtk4:widget-halign box3) gtk4:+align-fill+)
 
-        (gtk4:box-append box box2)))
+        (let ((labyy (gtk4:make-label :str "Woof")))
+          (setf
+                (gtk4:widget-margin-all labyy) 10
+                (gtk4:widget-hexpand-p labyy) t)
+
+          (gtk4:box-append box3 labyy))
+        (gtk4:box-append box box3)))
 
     (unless (gtk4:widget-visible-p window) (gtk4:window-present window))))
 
