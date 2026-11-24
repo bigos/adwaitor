@@ -64,9 +64,7 @@
 
       (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
       (setf (adw:toolbar-view-content toolbar-view) root-box)
-      (setf (adw:window-content window) toolbar-view)
-
-      )))
+      (setf (adw:window-content window) toolbar-view))))
 
 (defun on-activate (app)
   "Signal handler for application activation."
