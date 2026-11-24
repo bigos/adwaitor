@@ -8,8 +8,7 @@
   "Create a styled pill button and attach a click handler."
   (let ((button (gtk4:make-button :label label)))
     (setf (gtk4:widget-css-classes button) (cons "pill" css-classes)
-          (gtk4:widget-margin-all button) 10
-          (gtk4:widget-hexpand-p button) t)
+          (gtk4:widget-margin-all button) 8)
     (when on-click
       (gtk4:connect button "clicked"
                     (lambda (btn)
@@ -30,8 +29,10 @@
   "Construct the UI hierarchy and manage counter state via lexical closure."
   (let* ((counter 0)
          (toolbar-view (adw:make-toolbar-view))
-         (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0))
-         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
+         (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 12))
+         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+
+                                    :spacing 8
+                                    :halign gtk4:+align-center+))
          (status-label (gtk4:make-label :str "Press counter buttons please")))
 
     (labels ((update-counter (delta)
@@ -40,13 +41,13 @@
 
       ;; Configure layout properties
       (setf (gtk4:widget-size-request window) '(400 200)
-            (gtk4:widget-hexpand-p button-row) t
-            (gtk4:widget-halign button-row) gtk4:+align-fill+
+            (gtk4:widget-margin-all root-box) 16
             (gtk4:widget-margin-all status-label) 10
-            (gtk4:widget-hexpand-p status-label) t)
+            (gtk4:widget-vexpand-p status-label) t
+            (gtk4:widget-halign status-label) gtk4:+align-center+
+            (gtk4:widget-valign status-label) gtk4:+align-center+)
 
-
-      ;; Assemble header and buttons
+      ;; Assemble buttons and main content
       (gtk4:box-append button-row
                        (make-pill-button "Exit"
                                          :on-click (lambda () (gtk4:window-destroy window))))
@@ -63,8 +64,8 @@
       (gtk4:box-append root-box button-row)
 
       (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
-      (setf (adw:toolbar-view-content toolbar-view) root-box)
-      (setf (adw:window-content window) toolbar-view))))
+      (setf (adw:toolbar-view-content toolbar-view) root-box
+            (adw:window-content window) toolbar-view))))
 
 (defun on-activate (app)
   "Signal handler for application activation."
