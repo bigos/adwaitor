@@ -1,10 +1,8 @@
 (declaim (optimize (speed 0) (safety 2) (debug 3)))
 
-
 ;;; (ql:quickload :adw-counter)
 (in-package #:adw-counter)
 ;;; (main)
-
 
 (defun make-pill-button (label &key css-classes on-click)
   "Create a styled pill button and attach a click handler."
@@ -41,16 +39,7 @@
                (setf (gtk4:label-text status-label) (princ-to-string counter))))
 
       ;; Configure layout properties
-
-
-      (progn
-        ;; build your content in root-box as before, but WITHOUT the header bar
-        (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
-        (setf (adw:toolbar-view-content toolbar-view) root-box)
-        (setf (adw:window-content window) toolbar-view))
-
       (setf (gtk4:widget-size-request window) '(400 200)
-
             (gtk4:widget-hexpand-p button-row) t
             (gtk4:widget-halign button-row) gtk4:+align-fill+
             (gtk4:widget-margin-all status-label) 10
@@ -70,8 +59,14 @@
                                          :css-classes '("suggested-action")
                                          :on-click (lambda () (update-counter 1))))
 
+      (gtk4:box-append root-box status-label)
       (gtk4:box-append root-box button-row)
-      (gtk4:box-append root-box status-label))))
+
+      (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
+      (setf (adw:toolbar-view-content toolbar-view) root-box)
+      (setf (adw:window-content window) toolbar-view)
+
+      )))
 
 (defun on-activate (app)
   "Signal handler for application activation."
