@@ -1,6 +1,10 @@
 (declaim (optimize (speed 0) (safety 2) (debug 3)))
 
+
+;;; (ql:quickload :adw-counter)
 (in-package #:adw-counter)
+;;; (main)
+
 
 (defun make-pill-button (label &key css-classes on-click)
   "Create a styled pill button and attach a click handler."
