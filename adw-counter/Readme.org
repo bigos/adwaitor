@@ -1,1 +1,20 @@
 * Readme
+
+** environment problem on old Mint
+
+*** fix 1
+start with env variable:
+#+begin_example
+GSK_RENDERER=gl emacs
+#+end_example
+
+*** fix 2
+edit the:
+file:/etc/environment::1
+
+to look like:
+#+begin_example
+PATH="/usr/local/sbin:WHATEVER
+
+GSK_RENDERER=gl
+#+end_example
