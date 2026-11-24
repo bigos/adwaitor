@@ -7,93 +7,93 @@
 (defparameter *application* nil)
 (defparameter  *app-window* nil)
 
-(DEFUN MAIN-WINDOW-CONTENT (WINDOW)
-  (DECLARE (IGNORABLE WINDOW))
-  (LET ((EXPRESSION NIL))
+(defun main-window-content (window)
+  (declare (ignorable window))
+  (let ((expression nil))
     ;; (gtk4:WIDGET-ADD-CSS-CLASS WINDOW "devel")
-    (SETF (gtk4:WIDGET-SIZE-REQUEST WINDOW) '(400 600))
-    (LET ((BOX (gtk4:MAKE-BOX :ORIENTATION gtk4:+ORIENTATION-VERTICAL+ :SPACING 0)))
-      (SETF (ADW:WINDOW-CONTENT WINDOW) BOX)
-      (LET ((HEADER-BAR (ADW:MAKE-HEADER-BAR)))
-        (SETF (ADW:HEADER-BAR-TITLE-WIDGET HEADER-BAR)
-              (ADW:MAKE-WINDOW-TITLE :TITLE (format nil "~A will be counter" (LISP-IMPLEMENTATION-TYPE))
-                                     :SUBTITLE
+    (setf (gtk4:widget-size-request window) '(400 600))
+    (let ((box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0)))
+      (setf (adw:window-content window) box)
+      (let ((header-bar (adw:make-header-bar)))
+        (setf (adw:header-bar-title-widget header-bar)
+              (adw:make-window-title :title (format nil "~A will be counter" (lisp-implementation-type))
+                                     :subtitle
                                      ;; (LISP-IMPLEMENTATION-VERSION)
                                      nil
                                      ))
-        (gtk4:BOX-APPEND BOX HEADER-BAR))
-      (LET ((CAROUSEL (ADW:MAKE-CAROUSEL)))
-        (SETF (gtk4:WIDGET-HEXPAND-P CAROUSEL) T
-              (gtk4:WIDGET-VEXPAND-P CAROUSEL) T
-              (ADW:CAROUSEL-INTERACTIVE-P CAROUSEL) T)
-        (LET ((PAGE (ADW:MAKE-STATUS-PAGE)))
-          (SETF (gtk4:WIDGET-HEXPAND-P PAGE) T
-                (gtk4:WIDGET-VEXPAND-P PAGE) T
-                (ADW:STATUS-PAGE-ICON-NAME PAGE) "utilities-terminal-symbolic"
-                (ADW:STATUS-PAGE-TITLE PAGE) "Simple Lisp REPL for counter"
-                (ADW:STATUS-PAGE-DESCRIPTION PAGE) " ")
-          (FLET ((EVAL-EXPRESSION (WIDGET)
-                   (DECLARE (IGNORE WIDGET))
-                   (WHEN EXPRESSION
-                     (SETF (ADW:STATUS-PAGE-DESCRIPTION PAGE)
-                           (PRINC-TO-STRING
-                            (HANDLER-CASE (EVAL EXPRESSION)
-                              (ERROR (ERR) ERR)))))))
-            (LET ((BOX
-                    (gtk4:MAKE-BOX :ORIENTATION gtk4:+ORIENTATION-VERTICAL+ :SPACING 0)))
-              (LET ((GROUP (ADW:MAKE-PREFERENCES-GROUP)))
-                (SETF (gtk4:WIDGET-MARGIN-ALL GROUP) 10)
-                (LET ((ROW (ADW:MAKE-ACTION-ROW)))
-                  (SETF (ADW:PREFERENCES-ROW-TITLE ROW)
-                        (FORMAT NIL "~A>"
-                                (OR (CAR (PACKAGE-NICKNAMES *PACKAGE*))
-                                    (PACKAGE-NAME *PACKAGE*))))
-                  (LET ((ENTRY (gtk4:MAKE-ENTRY)))
-                    (SETF (gtk4:WIDGET-VALIGN ENTRY) gtk4:+ALIGN-CENTER+
-                          (gtk4:WIDGET-HEXPAND-P ENTRY) T)
-                    (gtk4:CONNECT ENTRY "changed"
-                                  (LAMBDA (ENTRY)
-                                    (SETF EXPRESSION
-                                          (IGNORE-ERRORS
-                                           (READ-FROM-STRING
-                                            (ENTRY-BUFFER-TEXT
-                                             (ENTRY-BUFFER ENTRY)))))
-                                    (FUNCALL
-                                     (IF EXPRESSION
-                                         #'WIDGET-REMOVE-CSS-CLASS
-                                         #'WIDGET-ADD-CSS-CLASS)
-                                     ENTRY "error")))
-                    (gtk4:CONNECT ENTRY "activate" #'EVAL-EXPRESSION)
-                    (ADW:ACTION-ROW-ADD-SUFFIX ROW ENTRY))
-                  (ADW:PREFERENCES-GROUP-ADD GROUP ROW))
-                (gtk4:BOX-APPEND BOX GROUP))
-              (LET ((CAROUSEL-BOX BOX)
-                    (BOX
-                      (gtk4:MAKE-BOX :ORIENTATION gtk4:+ORIENTATION-HORIZONTAL+ :SPACING
+        (gtk4:box-append box header-bar))
+      (let ((carousel (adw:make-carousel)))
+        (setf (gtk4:widget-hexpand-p carousel) t
+              (gtk4:widget-vexpand-p carousel) t
+              (adw:carousel-interactive-p carousel) t)
+        (let ((page (adw:make-status-page)))
+          (setf (gtk4:widget-hexpand-p page) t
+                (gtk4:widget-vexpand-p page) t
+                (adw:status-page-icon-name page) "utilities-terminal-symbolic"
+                (adw:status-page-title page) "Simple Lisp REPL for counter"
+                (adw:status-page-description page) " ")
+          (flet ((eval-expression (widget)
+                   (declare (ignore widget))
+                   (when expression
+                     (setf (adw:status-page-description page)
+                           (princ-to-string
+                            (handler-case (eval expression)
+                              (error (err) err)))))))
+            (let ((box
+                    (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0)))
+              (let ((group (adw:make-preferences-group)))
+                (setf (gtk4:widget-margin-all group) 10)
+                (let ((row (adw:make-action-row)))
+                  (setf (adw:preferences-row-title row)
+                        (format nil "~A>"
+                                (or (car (package-nicknames *package*))
+                                    (package-name *package*))))
+                  (let ((entry (gtk4:make-entry)))
+                    (setf (gtk4:widget-valign entry) gtk4:+align-center+
+                          (gtk4:widget-hexpand-p entry) t)
+                    (gtk4:connect entry "changed"
+                                  (lambda (entry)
+                                    (setf expression
+                                          (ignore-errors
+                                           (read-from-string
+                                            (entry-buffer-text
+                                             (entry-buffer entry)))))
+                                    (funcall
+                                     (if expression
+                                         #'widget-remove-css-class
+                                         #'widget-add-css-class)
+                                     entry "error")))
+                    (gtk4:connect entry "activate" #'eval-expression)
+                    (adw:action-row-add-suffix row entry))
+                  (adw:preferences-group-add group row))
+                (gtk4:box-append box group))
+              (let ((carousel-box box)
+                    (box
+                      (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
                                      0)))
-                (SETF (gtk4:WIDGET-HEXPAND-P BOX) T
-                      (gtk4:WIDGET-HALIGN BOX) gtk4:+ALIGN-FILL+)
-                (LET ((BUTTON (gtk4:MAKE-BUTTON :LABEL "Exit")))
-                  (SETF (gtk4:WIDGET-CSS-CLASSES BUTTON) '("pill")
-                        (gtk4:WIDGET-MARGIN-ALL BUTTON) 10
-                        (gtk4:WIDGET-HEXPAND-P BUTTON) T)
-                  (gtk4:CONNECT BUTTON "clicked"
-                                (LAMBDA (BUTTON)
-                                  (DECLARE (IGNORE BUTTON))
-                                  (gtk4:WINDOW-DESTROY WINDOW)))
-                  (gtk4:BOX-APPEND BOX BUTTON))
-                (LET ((BUTTON (gtk4:MAKE-BUTTON :LABEL "Eval")))
-                  (SETF (gtk4:WIDGET-CSS-CLASSES BUTTON)
+                (setf (gtk4:widget-hexpand-p box) t
+                      (gtk4:widget-halign box) gtk4:+align-fill+)
+                (let ((button (gtk4:make-button :label "Exit")))
+                  (setf (gtk4:widget-css-classes button) '("pill")
+                        (gtk4:widget-margin-all button) 10
+                        (gtk4:widget-hexpand-p button) t)
+                  (gtk4:connect button "clicked"
+                                (lambda (button)
+                                  (declare (ignore button))
+                                  (gtk4:window-destroy window)))
+                  (gtk4:box-append box button))
+                (let ((button (gtk4:make-button :label "Eval")))
+                  (setf (gtk4:widget-css-classes button)
                         '("suggested-action" "pill")
-                        (gtk4:WIDGET-MARGIN-ALL BUTTON) 10
-                        (gtk4:WIDGET-HEXPAND-P BUTTON) T)
-                  (gtk4:CONNECT BUTTON "clicked" #'EVAL-EXPRESSION)
-                  (gtk4:BOX-APPEND BOX BUTTON))
-                (gtk4:BOX-APPEND CAROUSEL-BOX BOX))
-              (SETF (ADW:STATUS-PAGE-CHILD PAGE) BOX)))
-          (ADW:CAROUSEL-APPEND CAROUSEL PAGE))
-        (gtk4:BOX-APPEND BOX CAROUSEL)))
-    (UNLESS (gtk4:WIDGET-VISIBLE-P WINDOW) (gtk4:WINDOW-PRESENT WINDOW))))
+                        (gtk4:widget-margin-all button) 10
+                        (gtk4:widget-hexpand-p button) t)
+                  (gtk4:connect button "clicked" #'eval-expression)
+                  (gtk4:box-append box button))
+                (gtk4:box-append carousel-box box))
+              (setf (adw:status-page-child page) box)))
+          (adw:carousel-append carousel page))
+        (gtk4:box-append box carousel)))
+    (unless (gtk4:widget-visible-p window) (gtk4:window-present window))))
 
 (defun window-main (&optional gtk4::argv)
   (let ((gtk4::app
