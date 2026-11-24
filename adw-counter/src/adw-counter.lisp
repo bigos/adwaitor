@@ -1,106 +1,77 @@
 (declaim (optimize (speed 0) (safety 2) (debug 3)))
 
-;;; (ql:quickload :adw-counter)
 (in-package #:adw-counter)
-;;; (main)
 
-(defparameter *application* nil)
-(defparameter  *app-window* nil)
+(defun make-pill-button (label &key css-classes on-click)
+  "Create a styled pill button and attach a click handler."
+  (let ((button (gtk4:make-button :label label)))
+    (setf (gtk4:widget-css-classes button) (cons "pill" css-classes)
+          (gtk4:widget-margin-all button) 10
+          (gtk4:widget-hexpand-p button) t)
+    (when on-click
+      (gtk4:connect button "clicked"
+                    (lambda (btn)
+                      (declare (ignore btn))
+                      (funcall on-click))))
+    button))
 
-(defparameter  *counter* 0)
-(defparameter *lab* nil)
+(defun build-header-bar ()
+  "Create the Adwaita header bar with dynamic Lisp implementation title."
+  (let ((header-bar (adw:make-header-bar)))
+    (setf (adw:header-bar-title-widget header-bar)
+          (adw:make-window-title
+           :title (format nil "~A Counter" (lisp-implementation-type))))
+    header-bar))
 
-(defun main-window-content (window)
-  (declare (ignorable window))
-  (let ((expression nil))
-    ;; (gtk4:WIDGET-ADD-CSS-CLASS WINDOW "devel")
-    (setf (gtk4:widget-size-request window) '(400 200))
-    (let ((box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0)))
-      (setf (adw:window-content window) box)
-      (let ((header-bar (adw:make-header-bar)))
-        (setf (adw:header-bar-title-widget header-bar)
-              (adw:make-window-title :title (format nil "~A will be counter" (lisp-implementation-type))
-                                     :subtitle
-                                     ;; (LISP-IMPLEMENTATION-VERSION)
-                                     nil))
-        (gtk4:box-append box header-bar))
+(defun build-main-content (window)
+  "Construct the UI hierarchy and manage counter state via lexical closure."
+  (let* ((counter 0)
+         (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0))
+         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
+         (status-label (gtk4:make-label :str "Press counter buttons")))
 
-      (let ((box2
-              (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
-                             0)))
-        (setf (gtk4:widget-hexpand-p box2) t
-              (gtk4:widget-halign box2) gtk4:+align-fill+)
+    (labels ((update-counter (delta)
+               (incf counter delta)
+               (setf (gtk4:label-text status-label) (princ-to-string counter))))
 
-        (let ((button (gtk4:make-button :label "Exit")))
-          (setf (gtk4:widget-css-classes button) '("pill")
-                (gtk4:widget-margin-all button) 10
-                (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked"
-                        (lambda (button)
-                          (declare (ignore button))
-                          (gtk4:window-destroy window)))
-          (gtk4:box-append box2 button))
-        (let ((button (gtk4:make-button :label "Eval -")))
-          (setf (gtk4:widget-css-classes button)
-                '("suggested-action" "pill")
-                (gtk4:widget-margin-all button) 10
-                (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda (button)
-                                           (decf *counter*)
-                                           (setf (gtk4:label-text *lab*) (format nil "~s" *counter*))
-                                           (warn "clicked -")))
-          (gtk4:box-append box2 button))
-        (let ((button (gtk4:make-button :label "Eval +")))
-          (setf (gtk4:widget-css-classes button)
-                '("suggested-action" "pill")
-                (gtk4:widget-margin-all button) 10
-                (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda (button)
-                                           (incf *counter*)
-                                           (setf (gtk4:label-text *lab*) (format nil "~s" *counter*))
-                                           (warn "clicked +")))
-          (gtk4:box-append box2 button))
-        (gtk4:box-append box box2))
-      (let ((box3
-              (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
-                             0)))
-        (setf (gtk4:widget-hexpand-p box3) t
-              (gtk4:widget-halign box3) gtk4:+align-fill+)
+      ;; Configure layout properties
+      (setf (gtk4:widget-size-request window) '(400 200)
+            (adw:window-content window) root-box
+            (gtk4:widget-hexpand-p button-row) t
+            (gtk4:widget-halign button-row) gtk4:+align-fill+
+            (gtk4:widget-margin-all status-label) 10
+            (gtk4:widget-hexpand-p status-label) t)
 
-        (let ((labyy (gtk4:make-label :str "Press counter buttons")))
-          (setf
-                (gtk4:widget-margin-all labyy) 10
-                (gtk4:widget-hexpand-p labyy) t)
-          (setf *lab* labyy)
+      ;; Assemble header and buttons
+      (gtk4:box-append root-box (build-header-bar))
 
-          (gtk4:box-append box3 labyy))
-        (gtk4:box-append box box3)))
+      (gtk4:box-append button-row
+                       (make-pill-button "Exit"
+                                         :on-click (lambda () (gtk4:window-destroy window))))
+      (gtk4:box-append button-row
+                       (make-pill-button "Decrement -"
+                                         :css-classes '("suggested-action")
+                                         :on-click (lambda () (update-counter -1))))
+      (gtk4:box-append button-row
+                       (make-pill-button "Increment +"
+                                         :css-classes '("suggested-action")
+                                         :on-click (lambda () (update-counter 1))))
 
-    (unless (gtk4:widget-visible-p window) (gtk4:window-present window))))
+      (gtk4:box-append root-box button-row)
+      (gtk4:box-append root-box status-label))))
 
-(defun window-main (&optional gtk4::argv)
-  (let ((gtk4::app
-          (gtk4:make-application :application-id
-                            "org.bohonghuang.libadwaita-example.simple-repl"
-                            :flags 0)))
-    (gtk4:connect gtk4::app "activate"
-             (lambda (gtk4::app)
-               (declare (ignore gtk4::app))
-               (let ((gtk4::win
-                       (setf *app-window*
-                             (adw:make-application-window :app
-                                                          *application*))))
-                 (main-window-content gtk4::win)
+(defun on-activate (app)
+  "Signal handler for application activation."
+  (let ((window (adw:make-application-window :app app)))
+    (build-main-content window)
+    (gtk4:window-present window)))
 
-                 (gtk4:connect gtk4::win "destroy"
-                          (lambda (gtk4::win)
-                            (declare (ignore gtk4::win))
-                            (setf *app-window*
-                                  nil))))))
-    (gtk4:application-run gtk4::app gtk4::argv)))
-
-(defun main ()
+(defun main (&optional argv)
+  "Entry point for the Adwaita counter application."
   (unless (adw:initialized-p)
     (adw:init))
-  (window-main)
-  (gtk4:idle-add (lambda () (main-window-content *app-window*))))
+  (let ((app (adw:make-application
+              :application-id "org.example.adw-counter"
+              :flags 0)))
+    (gtk4:connect app "activate" #'on-activate)
+    (gtk4:application-run app argv)))
