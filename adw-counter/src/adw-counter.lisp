@@ -7,6 +7,8 @@
 (defparameter *application* nil)
 (defparameter  *app-window* nil)
 
+(defparameter  *counter* 0)
+
 (defun main-window-content (window)
   (declare (ignorable window))
   (let ((expression nil))
@@ -42,14 +44,18 @@
                 '("suggested-action" "pill")
                 (gtk4:widget-margin-all button) 10
                 (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda (button) (warn "clicked -")))
+          (gtk4:connect button "clicked" (lambda (button)
+                                           (decf *counter*)
+                                           (warn "clicked -")))
           (gtk4:box-append box2 button))
         (let ((button (gtk4:make-button :label "Eval +")))
           (setf (gtk4:widget-css-classes button)
                 '("suggested-action" "pill")
                 (gtk4:widget-margin-all button) 10
                 (gtk4:widget-hexpand-p button) t)
-          (gtk4:connect button "clicked" (lambda (button) (warn "clicked +")))
+          (gtk4:connect button "clicked" (lambda (button)
+                                           (incf *counter*)
+                                           (warn "clicked +")))
           (gtk4:box-append box2 button))
         (gtk4:box-append box box2))
       (let ((box3
