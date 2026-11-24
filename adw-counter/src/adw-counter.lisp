@@ -95,26 +95,26 @@
         (gtk4:BOX-APPEND BOX CAROUSEL)))
     (UNLESS (gtk4:WIDGET-VISIBLE-P WINDOW) (gtk4:WINDOW-PRESENT WINDOW))))
 
-(DEFUN window-main (&OPTIONAL GTK4::ARGV)
-  (LET ((GTK4::APP
-          (gtk4:MAKE-APPLICATION :APPLICATION-ID
+(defun window-main (&optional gtk4::argv)
+  (let ((gtk4::app
+          (gtk4:make-application :application-id
                             "org.bohonghuang.libadwaita-example.simple-repl"
-                            :FLAGS 0)))
-    (gtk4:CONNECT GTK4::APP "activate"
-             (LAMBDA (GTK4::APP)
-               (DECLARE (IGNORE GTK4::APP))
-               (LET ((GTK4::WIN
-                       (SETF *app-window*
-                             (ADW:MAKE-APPLICATION-WINDOW :APP
-                                                          *APPLICATION*))))
-                 (MAIN-WINDOW-CONTENT GTK4::WIN)
+                            :flags 0)))
+    (gtk4:connect gtk4::app "activate"
+             (lambda (gtk4::app)
+               (declare (ignore gtk4::app))
+               (let ((gtk4::win
+                       (setf *app-window*
+                             (adw:make-application-window :app
+                                                          *application*))))
+                 (main-window-content gtk4::win)
 
-                 (gtk4:CONNECT GTK4::WIN "destroy"
-                          (LAMBDA (GTK4::WIN)
-                            (DECLARE (IGNORE GTK4::WIN))
-                            (SETF *app-window*
-                                  NIL))))))
-    (gtk4:APPLICATION-RUN GTK4::APP GTK4::ARGV)))
+                 (gtk4:connect gtk4::win "destroy"
+                          (lambda (gtk4::win)
+                            (declare (ignore gtk4::win))
+                            (setf *app-window*
+                                  nil))))))
+    (gtk4:application-run gtk4::app gtk4::argv)))
 
 (defun main ()
   (unless (adw:initialized-p)
