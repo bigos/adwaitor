@@ -31,6 +31,7 @@
 (defun build-main-content (window)
   "Construct the UI hierarchy and manage counter state via lexical closure."
   (let* ((counter 0)
+         (toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 0))
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
          (status-label (gtk4:make-label :str "Press counter buttons please")))
@@ -47,9 +48,13 @@
             (gtk4:widget-margin-all status-label) 10
             (gtk4:widget-hexpand-p status-label) t)
 
-      ;; Assemble header and buttons
-      (gtk4:box-append root-box (build-header-bar))
+      (progn
+        ;; build your content in root-box as before, but WITHOUT the header bar
+        (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
+        (setf (adw:toolbar-view-content toolbar-view) root-box)
+        (setf (adw:window-content window) toolbar-view))
 
+      ;; Assemble header and buttons
       (gtk4:box-append button-row
                        (make-pill-button "Exit"
                                          :on-click (lambda () (gtk4:window-destroy window))))
