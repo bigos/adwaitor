@@ -8,6 +8,7 @@
 (defparameter  *app-window* nil)
 
 (defparameter  *counter* 0)
+(defparameter *lab* nil)
 
 (defun main-window-content (window)
   (declare (ignorable window))
@@ -46,6 +47,7 @@
                 (gtk4:widget-hexpand-p button) t)
           (gtk4:connect button "clicked" (lambda (button)
                                            (decf *counter*)
+                                           (setf (gtk4:label-text *lab*) (format nil "~s" *counter*))
                                            (warn "clicked -")))
           (gtk4:box-append box2 button))
         (let ((button (gtk4:make-button :label "Eval +")))
@@ -55,6 +57,7 @@
                 (gtk4:widget-hexpand-p button) t)
           (gtk4:connect button "clicked" (lambda (button)
                                            (incf *counter*)
+                                           (setf (gtk4:label-text *lab*) (format nil "~s" *counter*))
                                            (warn "clicked +")))
           (gtk4:box-append box2 button))
         (gtk4:box-append box box2))
@@ -64,10 +67,11 @@
         (setf (gtk4:widget-hexpand-p box3) t
               (gtk4:widget-halign box3) gtk4:+align-fill+)
 
-        (let ((labyy (gtk4:make-label :str "Woof")))
+        (let ((labyy (gtk4:make-label :str "Press counter buttons")))
           (setf
                 (gtk4:widget-margin-all labyy) 10
                 (gtk4:widget-hexpand-p labyy) t)
+          (setf *lab* labyy)
 
           (gtk4:box-append box3 labyy))
         (gtk4:box-append box box3)))
