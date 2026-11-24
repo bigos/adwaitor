@@ -65,13 +65,13 @@
                     (gtk4:connect entry "activate" #'eval-expression)
                     (adw:action-row-add-suffix row entry))
                   (adw:preferences-group-add group row))
-                (gtk4:box-append box1 group))
-              (let ((carousel-box box)
+                (gtk4:box-append box group))
+              (let ((carousel-box box1)
                     (box2
                       (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing
                                      0)))
-                (setf (gtk4:widget-hexpand-p box) t
-                      (gtk4:widget-halign box) gtk4:+align-fill+)
+                (setf (gtk4:widget-hexpand-p box2) t
+                      (gtk4:widget-halign box2) gtk4:+align-fill+)
                 (let ((button (gtk4:make-button :label "Exit")))
                   (setf (gtk4:widget-css-classes button) '("pill")
                         (gtk4:widget-margin-all button) 10
@@ -80,14 +80,14 @@
                                 (lambda (button)
                                   (declare (ignore button))
                                   (gtk4:window-destroy window)))
-                  (gtk4:box-append box button))
+                  (gtk4:box-append box2 button))
                 (let ((button (gtk4:make-button :label "Eval")))
                   (setf (gtk4:widget-css-classes button)
                         '("suggested-action" "pill")
                         (gtk4:widget-margin-all button) 10
                         (gtk4:widget-hexpand-p button) t)
                   (gtk4:connect button "clicked" #'eval-expression)
-                  (gtk4:box-append box button))
+                  (gtk4:box-append box2 button))
                 (gtk4:box-append carousel-box box2))
               (setf (adw:status-page-child page) box1)))
           (adw:carousel-append carousel page))
