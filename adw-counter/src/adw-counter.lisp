@@ -31,8 +31,7 @@
          (toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 12))
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+
-                                    :spacing 8
-                                    :halign gtk4:+align-center+))
+                                    :spacing 8))
          (status-label (gtk4:make-label :str "Press counter buttons please")))
 
     (labels ((update-counter (delta)
