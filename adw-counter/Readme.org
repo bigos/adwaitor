@@ -2,6 +2,8 @@
 
 ** environment problem on old Mint
 
+On some systems widgets and text are not displayed properly.
+
 *** fix 1
 start with env variable:
 #+begin_example
