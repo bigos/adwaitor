@@ -49,7 +49,7 @@
       ;; Assemble buttons and main content
       (gtk4:box-append button-row
                        (make-pill-button "Exit"
-                                         :on-click (lambda () (gtk4:window-destroy window))))
+                                         :on-click (lambda () (gtk4:window-close window))))
       (gtk4:box-append button-row
                        (make-pill-button "Decrement -"
                                          :css-classes '("suggested-action")
