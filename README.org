@@ -1,11 +1,11 @@
 * Readme
-
 This is adwaitor for trying adwaita library.
+
 ** environment problem on old Mint
 
 On some systems widgets and text are not displayed properly.
-*** fix 1
 
+*** fix 1
 start with env variable:
 #+begin_example
 GSK_RENDERER=gl emacs
@@ -21,3 +21,12 @@ PATH="/usr/local/sbin:WHATEVER
 
 GSK_RENDERER=gl
 #+end_example
+
+** Cuis resources
+https://cuis.st/documentation/tutorials/
+
+*** The Morph Book vol. I - Designing Graphic User Interfaces
+https://drcuis.github.io/DesignGUI
+
+*** The Morph Book vol. II - The Art of Morph
+https://drcuis.github.io/TheArtOfMorph
