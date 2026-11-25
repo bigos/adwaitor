@@ -50,8 +50,12 @@
       (gtk4:box-append root-box name-label)
       (gtk4:box-append root-box entry-row)
       (gtk4:box-append button-row
-                       (make-pill-button "Greet"
-                                         :on-click (lambda () (gtk4:window-close window))))
+                       (make-pill-button
+                        "Greet"
+                        :on-click (lambda ()
+                                    (let ((the-text (gtk4:editable-text entry-row)))
+                                      (warn "the text ~s" the-text)
+                                      (setf (gtk4:label-text status-label) the-text)))))
       (gtk4:box-append root-box button-row)
       (gtk4:box-append root-box status-label)
 
