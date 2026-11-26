@@ -1,8 +1,6 @@
 (declaim (optimize (speed 0) (safety 2) (debug 3)))
 
-;;; (ql:quickload :adw-greeter)
 (in-package #:adw-greeter)
-;;; (main)
 
 (defun make-pill-button (label &key css-classes on-click)
   "Create a styled pill button and attach a click handler."
@@ -79,11 +77,11 @@
     (gtk4:window-present window)))
 
 (defun main (&optional argv)
-  "Entry point for the Adwaita counter application."
+  "Entry point for the Adwaita greeter application."
   (unless (adw:initialized-p)
     (adw:init))
   (let ((app (adw:make-application
-              :application-id "org.example.adw-counter"
+              :application-id "org.example.adw-greeter"
               :flags 0)))
     (gtk4:connect app "activate" #'on-activate)
     (gtk4:application-run app argv)))
