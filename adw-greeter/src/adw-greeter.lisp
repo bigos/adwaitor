@@ -80,5 +80,51 @@
       ;; Assemble the main content.
       (gtk4:list-box-append input-list entry-row)
       (gtk4:box-append
-       button
-
+       button-row
+       (make-pill-button "Greet"
+                         :css-classes '("suggested-action")
+                         :on-click #'update-greeting))
+
+      (gtk4:box-append form-row input-list)
+      (gtk4:box-append form-row button-row)
+
+      ;; Switch form-row to vertical when the bin is 340 px or narrower.
+      (let ((breakpoint
+              (adw:make-breakpoint
+               :condition
+               (adw:breakpoint-condition-parse
+                "max-width: 340px"))))
+        (adw:breakpoint-add-setter
+         breakpoint
+         form-row
+         "orientation"
+         gtk4:+orientation-vertical+)
+        (adw:breakpoint-bin-add-breakpoint
+         breakpoint-container
+         breakpoint))
+
+      (gtk4:box-append root-box breakpoint-container)
+      (gtk4:box-append root-box status-label)
+
+      (adw:toolbar-view-add-top-bar
+       toolbar-view
+       (build-header-bar))
+
+      (setf (adw:toolbar-view-content toolbar-view) root-box
+            (adw:window-content window) toolbar-view))))
+
+(defun on-activate (app)
+  "Signal handler for application activation."
+  (let ((window (adw:make-application-window :app app)))
+    (build-main-content window)
+    (gtk4:window-present window)))
+
+(defun main (&optional argv)
+  "Entry point for the Adwaita greeter application."
+  (unless (adw:initialized-p)
+    (adw:init))
+  (let ((app (adw:make-application
+              :application-id "org.example.adw-greeter"
+              :flags 0)))
+    (gtk4:connect app "activate" #'on-activate)
+    (gtk4:application-run app argv)))
