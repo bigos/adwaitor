@@ -34,6 +34,7 @@
 
     (flet ((update-greeting ()
              (let ((name (string-trim '(#\Space #\Tab #\Newline)
+                                      ;; get the text of the entry row
                                       (gtk4:editable-text entry-row))))
                (setf (gtk4:label-text status-label)
                      (if (string= name "")
