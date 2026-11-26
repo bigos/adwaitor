@@ -26,23 +26,17 @@
 (defun build-main-content (window)
   "Construct the UI hierarchy and manage greeter state via lexical closure."
   (let* ((toolbar-view (adw:make-toolbar-view))
-         (root-box
-           (gtk4:make-box
-            :orientation gtk4:+orientation-vertical+
-            :spacing 16))
-         (form-row
-           (gtk4:make-box
-            :orientation gtk4:+orientation-horizontal+
-            :spacing 8))
+         (root-box (gtk4:make-box
+                    :orientation gtk4:+orientation-vertical+
+                    :spacing 16))
+         (form-row (gtk4:make-box
+                    :orientation gtk4:+orientation-horizontal+
+                    :spacing 8))
          (breakpoint-container (adw:make-breakpoint-bin))
          (input-list (gtk4:make-list-box))
          (entry-row (adw:make-entry-row))
-         (button-row
-           (gtk4:make-box
-            :orientation gtk4:+orientation-horizontal+
-            :spacing 0))
-         (status-label
-           (gtk4:make-label :str "Press Greet button please")))
+         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
+         (status-label (gtk4:make-label :str "Press Greet button please")))
 
     (flet ((update-greeting ()
              (let ((name
@@ -61,8 +55,7 @@
             (gtk4:widget-hexpand-p breakpoint-container) t
             (gtk4:widget-size-request breakpoint-container) '(340 120)
             (gtk4:widget-css-classes input-list) '("boxed-list")
-            (gtk4:list-box-selection-mode input-list)
-            gtk4:+selection-mode-none+
+            (gtk4:list-box-selection-mode input-list) gtk4:+selection-mode-none+
             (gtk4:widget-hexpand-p input-list) t
             (gtk4:widget-vexpand-p status-label) t
             (gtk4:widget-halign status-label) gtk4:+align-center+
@@ -89,16 +82,15 @@
       (gtk4:box-append form-row button-row)
 
       ;; Switch form-row to vertical when the bin is 340 px or narrower.
-      (let ((breakpoint
-              (adw:make-breakpoint
-               :condition
-               (adw:breakpoint-condition-parse
-                "max-width: 340px"))))
-        ;; (adw:breakpoint-add-setter
-        ;;  breakpoint form-row"orientation" gtk4:+orientation-vertical+)
-        (adw:breakpoint-bin-add-breakpoint
-         breakpoint-container
-         breakpoint))
+      (let ((breakpoint (adw:make-breakpoint :condition
+                                             (adw:breakpoint-condition-parse "max-width: 340px"))))
+        (progn
+          (adw:breakpoint-add-setter breakpoint
+                                     form-row
+                                     "orientation"
+                                     nil))
+
+        (adw:breakpoint-bin-add-breakpoint breakpoint-container breakpoint))
 
       (gtk4:box-append root-box breakpoint-container)
       (gtk4:box-append root-box status-label)
