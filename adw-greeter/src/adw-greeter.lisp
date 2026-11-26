@@ -34,6 +34,17 @@
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
          (status-label (gtk4:make-label :str "Press Greet button please")))
 
+
+
+    (let ((breakpoint
+            (adw:make-breakpoint
+             :condition
+             (adw:breakpoint-condition-parse "max-width: 520px"))))
+      (adw:breakpoint-add-setter
+       breakpoint form-row "orientation" gtk4:+orientation-vertical+)
+      (adw:breakpoint-bin-add-breakpoint breakpoint-container breakpoint))
+
+
     (flet ((update-greeting ()
              (let ((name (string-trim '(#\Space #\Tab #\Newline)
                                       ;; get the text of the entry row
