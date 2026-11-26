@@ -70,8 +70,10 @@
 
       (gtk4:box-append form-row input-list)
       (gtk4:box-append form-row button-row)
-      (gtk4:box-append breakpoint-container form-row)
+
+      (setf (adw:breakpoint-bin-child breakpoint-container) form-row)
       (gtk4:box-append root-box breakpoint-container)
+
       (gtk4:box-append root-box status-label)
 
       (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
