@@ -47,8 +47,8 @@
             (gtk4:widget-valign status-label) gtk4:+align-center+)
 
       ;; Assemble the main content
-      (gtk4:box-append root-box name-label)
-      (gtk4:box-append root-box entry-row)
+      (gtk4:box-append button-row name-label)
+      (gtk4:box-append button-row entry-row)
       (gtk4:box-append button-row
                        (make-pill-button
                         "Greet"
