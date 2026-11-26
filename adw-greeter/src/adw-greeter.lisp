@@ -28,8 +28,7 @@
   (let* ((toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 16))
          (input-list (gtk4:make-list-box))
-         (entry-row (adw:make-entry-row ;; :title "Name"
-                                        ))
+         (entry-row (adw:make-entry-row))
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
          (status-label (gtk4:make-label :str "Press Greet button please")))
 
@@ -41,8 +40,9 @@
                          "Please enter a name first."
                          (format nil "Hello, ~A!" name))))))
 
-      ;; Configure layout properties
-      (setf (gtk4:widget-size-request window) '(400 240)
+      ;; Configure layout and widget properties
+      (setf (adw:preferences-row-title entry-row) "Name"
+            (gtk4:widget-size-request window) '(400 240)
             (gtk4:widget-margin-all root-box) 24
             (gtk4:widget-css-classes input-list) '("boxed-list")
             (gtk4:list-box-selection-mode input-list) gtk4:+selection-mode-none+
