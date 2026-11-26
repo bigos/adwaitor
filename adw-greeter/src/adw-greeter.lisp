@@ -28,7 +28,8 @@
   (let* ((toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 16))
          (input-list (gtk4:make-list-box))
-         (entry-row (adw:make-entry-row :title "Name"))
+         (entry-row (adw:make-entry-row ;; :title "Name"
+                                        ))
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
          (status-label (gtk4:make-label :str "Press Greet button please")))
 
