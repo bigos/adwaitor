@@ -56,9 +56,9 @@
             (gtk4:widget-margin-all root-box) 24
             (gtk4:widget-hexpand-p form-row) t
             (gtk4:widget-hexpand-p breakpoint-container) t
+            (gtk4:widget-size-request breakpoint-container) '(320 120)
             (gtk4:widget-css-classes input-list) '("boxed-list")
-            (gtk4:list-box-selection-mode input-list)
-            gtk4:+selection-mode-none+
+            (gtk4:list-box-selection-mode input-list) gtk4:+selection-mode-none+
             (gtk4:widget-hexpand-p input-list) t
             (gtk4:widget-vexpand-p status-label) t
             (gtk4:widget-halign status-label) gtk4:+align-center+
