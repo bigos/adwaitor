@@ -28,7 +28,6 @@
   (let* ((toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 16))
          (form-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
-         (breakpoint-container (adw:make-breakpoint-bin))
          (input-list (gtk4:make-list-box))
          (entry-row (adw:make-entry-row))
          (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
@@ -70,10 +69,7 @@
 
       (gtk4:box-append form-row input-list)
       (gtk4:box-append form-row button-row)
-
-      (setf (adw:breakpoint-bin-child breakpoint-container) form-row)
-      (gtk4:box-append root-box breakpoint-container)
-
+      (gtk4:box-append root-box form-row)
       (gtk4:box-append root-box status-label)
 
       (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
