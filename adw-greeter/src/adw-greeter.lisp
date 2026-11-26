@@ -90,11 +90,11 @@
                :condition
                (adw:breakpoint-condition-parse
                 "max-width: 520px"))))
-        (adw:breakpoint-add-setter
-         breakpoint
-         form-row
-         "orientation"
-         gtk4:+orientation-vertical+)
+        ;; (adw:breakpoint-add-setter
+        ;;  breakpoint
+        ;;  form-row
+        ;;  "orientation"
+        ;;  gtk4:+orientation-vertical+)
         (adw:breakpoint-bin-add-breakpoint
          breakpoint-container
          breakpoint))
