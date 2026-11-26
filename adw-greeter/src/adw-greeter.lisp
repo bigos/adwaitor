@@ -28,34 +28,43 @@
 (defun build-main-content (window)
   "Construct the UI hierarchy and manage greeter state via lexical closure."
   (let* ((toolbar-view (adw:make-toolbar-view))
-         (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 12))
-         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+
-                                    :spacing 8))
-         (name-label (gtk4:make-label :str "Name"))
-         ;; entry
-         (entry-row (adw:make-entry-row))
-         (status-label (gtk4:make-label :str "Press greeter button please")))
+         (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 16))
+         (input-list (gtk4:make-list-box))
+         (entry-row (adw:make-entry-row :title "Name"))
+         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
+         (status-label (gtk4:make-label :str "Press Greet button please")))
 
-    (labels ()
+    (flet ((update-greeting ()
+             (let ((name (string-trim '(#\Space #\Tab #\Newline)
+                                      (gtk4:editable-text entry-row))))
+               (setf (gtk4:label-text status-label)
+                     (if (string= name "")
+                         "Please enter a name first."
+                         (format nil "Hello, ~A!" name))))))
 
       ;; Configure layout properties
-      (setf (gtk4:widget-size-request window) '(400 200)
-            (gtk4:widget-margin-all root-box) 16
-            (gtk4:widget-margin-all status-label) 10
+      (setf (gtk4:widget-size-request window) '(400 240)
+            (gtk4:widget-margin-all root-box) 24
+            (gtk4:widget-css-classes input-list) '("boxed-list")
+            (gtk4:list-box-selection-mode input-list) gtk4:+selection-mode-none+
+            (gtk4:widget-halign button-row) gtk4:+align-center+
             (gtk4:widget-vexpand-p status-label) t
             (gtk4:widget-halign status-label) gtk4:+align-center+
             (gtk4:widget-valign status-label) gtk4:+align-center+)
 
+      ;; Allow pressing Enter inside the entry row
+      (gtk4:connect entry-row "entry-activated"
+                    (lambda (row)
+                      (declare (ignore row))
+                      (update-greeting)))
+
       ;; Assemble the main content
-      (gtk4:box-append button-row name-label)
-      (gtk4:box-append button-row entry-row)
+      (gtk4:list-box-append input-list entry-row)
       (gtk4:box-append button-row
-                       (make-pill-button
-                        "Greet"
-                        :on-click (lambda ()
-                                    (let ((the-text (gtk4:editable-text entry-row)))
-                                      (warn "the text ~s" the-text)
-                                      (setf (gtk4:label-text status-label) the-text)))))
+                       (make-pill-button "Greet"
+                                         :css-classes '("suggested-action")
+                                         :on-click #'update-greeting))
+      (gtk4:box-append root-box input-list)
       (gtk4:box-append root-box button-row)
       (gtk4:box-append root-box status-label)
 
