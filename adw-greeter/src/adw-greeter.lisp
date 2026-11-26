@@ -5,7 +5,7 @@
 (defun make-pill-button (label &key css-classes on-click)
   "Create a styled pill button and attach a click handler."
   (let ((button (gtk4:make-button :label label)))
-    (setf (gtk4:widget-css-classes button) (cons "pill" css-classes)
+    (setf (gtk4:widget-css-classes button) (cons "raised" css-classes)
           (gtk4:widget-margin-all button) 8)
     (when on-click
       (gtk4:connect button "clicked"
@@ -27,9 +27,10 @@
   "Construct the UI hierarchy and manage greeter state via lexical closure."
   (let* ((toolbar-view (adw:make-toolbar-view))
          (root-box (gtk4:make-box :orientation gtk4:+orientation-vertical+ :spacing 16))
+         (form-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
          (input-list (gtk4:make-list-box))
          (entry-row (adw:make-entry-row))
-         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 8))
+         (button-row (gtk4:make-box :orientation gtk4:+orientation-horizontal+ :spacing 0))
          (status-label (gtk4:make-label :str "Press Greet button please")))
 
     (flet ((update-greeting ()
@@ -47,7 +48,7 @@
             (gtk4:widget-margin-all root-box) 24
             (gtk4:widget-css-classes input-list) '("boxed-list")
             (gtk4:list-box-selection-mode input-list) gtk4:+selection-mode-none+
-            (gtk4:widget-halign button-row) gtk4:+align-center+
+            (gtk4:widget-hexpand-p input-list) t
             (gtk4:widget-vexpand-p status-label) t
             (gtk4:widget-halign status-label) gtk4:+align-center+
             (gtk4:widget-valign status-label) gtk4:+align-center+)
@@ -64,8 +65,10 @@
                        (make-pill-button "Greet"
                                          :css-classes '("suggested-action")
                                          :on-click #'update-greeting))
-      (gtk4:box-append root-box input-list)
-      (gtk4:box-append root-box button-row)
+
+      (gtk4:box-append form-row input-list)
+      (gtk4:box-append form-row button-row)
+      (gtk4:box-append root-box form-row)
       (gtk4:box-append root-box status-label)
 
       (adw:toolbar-view-add-top-bar toolbar-view (build-header-bar))
