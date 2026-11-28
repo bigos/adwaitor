@@ -2,7 +2,7 @@
 
 (in-package #:adw-greeter)
 
-(defun make-pill-button (label &key css-classes on-click)
+(defun make-action-button (label &key css-classes on-click)
   "Create a styled pill button and attach a click handler."
   (let ((button (gtk4:make-button :label label)))
     (setf (gtk4:widget-css-classes button) (cons "raised" css-classes)
@@ -63,7 +63,7 @@
       ;; Assemble the main content
       (gtk4:list-box-append input-list entry-row)
       (gtk4:box-append button-row
-                       (make-pill-button "Greet"
+                       (make-action-button "Greet"
                                          :css-classes '("suggested-action")
                                          :on-click #'update-greeting))
 
