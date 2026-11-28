@@ -3,10 +3,10 @@
 (in-package #:adw-greeter)
 
 (defun make-action-button (label &key css-classes on-click)
-  "Create a styled pill button and attach a click handler."
+  "Create a styled button and attach a click handler."
   (let ((button (gtk4:make-button :label label)))
-    (setf (gtk4:widget-css-classes button) (cons "raised" css-classes)
-          (gtk4:widget-margin-all button) 8)
+    (setf (gtk4:widget-css-classes button) css-classes
+          (gtk4:widget-valign button) gtk4:+align-center+)
     (when on-click
       (gtk4:connect button "clicked"
                     (lambda (btn)
